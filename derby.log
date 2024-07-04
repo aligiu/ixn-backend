@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Fri Jul 05 00:43:21 BST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217): instance a816c00e-0190-8021-8d8f-000003e2ad70 
+on database directory memory:/Users/hugo/Main/Coding/ixn_backend/2a64b6bb-33de-4297-aba9-474a4596568a with class loader org.springframework.boot.loader.launch.LaunchedClassLoader@2a84aee7 
+Loaded from jar:nested:/Users/hugo/Main/Coding/ixn_backend/target/ixn-0.0.1-SNAPSHOT.jar/!BOOT-INF/lib/derby-10.17.1.0.jar!/
+java.vendor=Oracle Corporation
+java.runtime.version=22.0.1+8-16
+user.dir=/Users/hugo/Main/Coding/ixn_backend
+os.name=Mac OS X
+os.arch=aarch64
+os.version=14.5
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
