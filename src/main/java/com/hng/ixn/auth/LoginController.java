@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController {
 
+	String username = "user";
+	String password = "pass";
+
 	@RequestMapping("/login")
 	public String login() {
 		return "login";
 	}
-
 }
