@@ -24,7 +24,8 @@ public class AuthenticationController {
             AuthenticationResponse response = service.register(request);
             return ResponseEntity.ok(response);
         } catch (EmailAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            AuthenticationResponse errorResponse = service.rejectAsEmailExists(request);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse); // Return conflict status with error message
         }
     }
     @PostMapping("/authenticate")

@@ -30,7 +30,6 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (repository.existsByEmail(request.getEmail())) {
-            System.out.println("Exception raised: Email already exists");
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
@@ -46,6 +45,12 @@ public class AuthenticationService {
                 .build();
     }
 
+    public AuthenticationResponse rejectAsEmailExists(RegisterRequest request) {
+        return AuthenticationResponse.builder()
+                .errorMessage("Email already exists")
+                .build();
+    }
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
         logger.info("*** Authentication successful for user: {}", request.getEmail());
@@ -58,7 +63,7 @@ public class AuthenticationService {
                 )
         );
 
-        var user = repository.findByEmail(request.getEmail()). orElseThrow();
+        var user = repository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
