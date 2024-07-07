@@ -1,5 +1,6 @@
 package com.hng.ixn.auth;
 
+import com.hng.ixn.auth.exception.EmailAlreadyExistsException;
 import com.hng.ixn.config.JwtService;
 import com.hng.ixn.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,11 @@ public class AuthenticationService {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (repository.existsByEmail(request.getEmail())) {
+            System.out.println("Exception raised: Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
+        }
+
         var user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
