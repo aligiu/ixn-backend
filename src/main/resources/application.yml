@@ -4,4 +4,4 @@ spring:
       name: "x"
       password: "x"
 server:
-  port: 8081
+  port: 8080
