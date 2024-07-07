@@ -16,7 +16,7 @@ import java.security.Key;
 
 @Service
 public class JwtService {
-    public static final String SECRET_KEY ="1234"; // TODO
+    public static final String SECRET_KEY = "1EE4CC5F13A05B916EC35E8AEDA7D86871A48BC82B2761D1DD5D83B150455C83F3C31D18D0D8954E12EDA40AA78F03D94D168664B8F56ED1CE42826EEA590187A7C1EDDB637FA6738FFED6DF832D2790AD906E8EAE7B477B313AF9C4887B204B57C30114CEA82451DC2B66BEB14D385A07C6684271E20057C04288A08646BF4A"; // TODO
 
     private Claims extractAllClaims(String token) {
         return Jwts
@@ -27,7 +27,7 @@ public class JwtService {
                 .getBody();
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T>claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
