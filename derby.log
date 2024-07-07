@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Fri Jul 05 19:19:33 BST 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217): instance a816c00e-0190-841f-7960-000000aca1b0 
-on database directory memory:/Users/hugo/Main/Coding/ixn_backend/db06fbe2-541f-41f3-873c-4fcb9502e38a with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@4e0e2f2a 
+Sun Jul 07 15:50:56 BST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217): instance a816c00e-0190-8dad-3379-0000048b06f8 
+on database directory memory:/Users/hugo/Main/Coding/ixn_backend/c4f00535-cb54-4639-8cf6-d4e395f7b787 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@4e0e2f2a 
 Loaded from file:/Users/hugo/.m2/repository/org/apache/derby/derby/10.17.1.0/derby-10.17.1.0.jar
 java.vendor=Oracle Corporation
 java.runtime.version=22.0.1+8-16
