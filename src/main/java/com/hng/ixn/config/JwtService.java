@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.security.Key;
+import java.util.stream.Collectors;
+import org.springframework.security.core.GrantedAuthority;
 
 @Service
 public class JwtService {
@@ -45,6 +47,10 @@ public class JwtService {
             UserDetails userDetails
 //            long expiration
     ) {
+        // Extract roles from UserDetails and add to extraClaims
+        extraClaims.put("roles", userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
