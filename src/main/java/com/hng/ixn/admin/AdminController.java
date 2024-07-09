@@ -10,7 +10,7 @@ public class AdminController {
 
     @GetMapping("/some")
     public String home() {
-        return "You are viewing some admin data";
+        return "You are viewing some admin stuff";
     }
 
 }
