@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/content/public")
-public class PublicContentController {
+@RequestMapping("/api/content")
+public class ContentController {
 
     @GetMapping("/some")
     public String home() {
-        return "You are viewing some public content";
+        return "You are viewing content";
     }
 
 }

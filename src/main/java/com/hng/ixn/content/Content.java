@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="_user")
+@Table
 public class Content {
 
     @Id
@@ -27,9 +27,9 @@ public class Content {
     private String content;
 
     @Column(unique = true)
-    private Integer next_id;
+    private Integer nextId;
 
     @Column(unique = true)
-    private Integer prev_id;
+    private Integer prevId;
 
 }

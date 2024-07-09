@@ -1,16 +1,16 @@
-package com.hng.ixn.content;
+package com.hng.ixn.secret;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/content/protected")
-public class ProtectedContentController {
+@RequestMapping("/api/secret")
+public class SecretController {
 
     @GetMapping("/some")
     public String home() {
-        return "You are viewing some protected content";
+        return "You are viewing secret";
     }
 
 }
