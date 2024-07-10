@@ -26,6 +26,7 @@ public class ContentController {
         return contentService.getAllContent();
     }
 
+    // only ADMIN can POST content, see SecurityConfiguration
     @PostMapping("")
     public ResponseEntity<List<Content>> createContent(@RequestBody List<ContentDTO> contentDTOs) {
         List<Content> createdContents = contentService.saveAllContent(contentDTOs);

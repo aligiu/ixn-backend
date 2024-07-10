@@ -30,24 +30,6 @@ public class ContentService {
                 .prevId(dto.getPrevId())
                 .timestamp(dto.getTimestamp() != null ? dto.getTimestamp() : LocalDateTime.now())
                 .build()).collect(Collectors.toList());
-
-//        Content third = contents.get(2);
-//        System.out.println("***" + third.toString() + "**");
-//        System.out.println("***");
-//        System.out.println(third.getId());
-//        System.out.println(third.getTitle());
-//        System.out.println(third.getDescription());
-//        System.out.println(third.getContent().equals(""));
-//        System.out.println(third.getNextId());
-//        System.out.println(third.getPrevId());
-//        System.out.println(third.getTimestamp());
-//        System.out.println("***");
-
-//        List<Content> thirdList = new ArrayList<>();
-//        thirdList.add(third);
-//        System.out.println(third.getContent() + "content **");
-//        return contentRepository.saveAll(thirdList);
-
         return contentRepository.saveAll(contents);
     }
 }
