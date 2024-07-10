@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @lombok.Data
 @Builder
@@ -18,18 +19,21 @@ public class Content {
     private Integer id;
 
     @Column(nullable = false)
-    private String text;
+    private String title;
 
     @Column(nullable = false)
     private String description;
 
-    @Column(columnDefinition = "TEXT")  // to store long text
+    @Column(columnDefinition = "TEXT", nullable = false)  // to store long text
     private String content;
 
-    @Column(unique = true)
+    @Column
     private Integer nextId;
 
-    @Column(unique = true)
+    @Column
     private Integer prevId;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime timestamp;
 
 }
