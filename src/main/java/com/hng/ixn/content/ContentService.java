@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,11 @@ public class ContentService {
         return contentRepository.findAll();
     }
 
-    public List<Content> saveAllContent(List<ContentDTO> contentDTOs) {
+    public List<Content> getLatestContent() {
+        return contentRepository.findAllWithMaxTimestamp();
+    }
+
+    public List<Content> saveMultipleContent(List<ContentDTO> contentDTOs) {
         List<Content> contents = contentDTOs.stream().map(dto -> Content.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
