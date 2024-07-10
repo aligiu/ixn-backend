@@ -27,6 +27,7 @@ public class ContentService {
     public List<Content> saveMultipleContent(List<ContentDTO> contentDTOs) {
         List<Content> contents = contentDTOs.stream().map(dto -> Content.builder()
                 .title(dto.getTitle())
+                .id(dto.getId())
                 .description(dto.getDescription())
                 .content(dto.getContent())
                 .nextId(dto.getNextId())

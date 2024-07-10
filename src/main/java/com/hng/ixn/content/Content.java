@@ -16,6 +16,9 @@ public class Content {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer globalId;
+
+    @Column(nullable = false)
     private Integer id;
 
     @Column(nullable = false)
