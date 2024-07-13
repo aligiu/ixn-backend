@@ -31,7 +31,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/secret/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/content/**").hasRole("ADMIN")  // only ADMIN can POST content
+//                .requestMatchers(HttpMethod.POST, "/api/content/**").hasRole("ADMIN")  // only ADMIN can POST content
                 .anyRequest().permitAll()
         )
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

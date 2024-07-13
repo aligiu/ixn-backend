@@ -2,6 +2,7 @@ package com.hng.ixn.content;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -30,7 +31,7 @@ public class ContentController {
         return new ResponseEntity<>(latestContent, HttpStatus.OK);
     }
 
-    // only ADMIN can POST content, see SecurityConfiguration
+    @PreAuthorize("hasRole('ADMIN')")  // only admins can post content
     @PostMapping("")
     public ResponseEntity<List<Content>> createContent(@RequestBody List<ContentDTO> contentDTOs) {
         List<Content> createdContent = contentService.saveMultipleContent(contentDTOs);
