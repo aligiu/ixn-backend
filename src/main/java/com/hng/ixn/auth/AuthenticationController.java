@@ -1,8 +1,7 @@
 package com.hng.ixn.auth;
 
 import com.hng.ixn.auth.exception.EmailAlreadyExistsException;
-import com.hng.ixn.user.Role;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService service;

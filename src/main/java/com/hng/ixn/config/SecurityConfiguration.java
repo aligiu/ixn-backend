@@ -28,10 +28,8 @@ public class SecurityConfiguration {
         http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/secret/**").hasAnyRole("USER", "ADMIN")
-//                .requestMatchers(HttpMethod.POST, "/api/content/**").hasRole("ADMIN")  // only ADMIN can POST content
                 .anyRequest().permitAll()
         )
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
