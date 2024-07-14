@@ -54,6 +54,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .email(request.getEmail())
+                .isAdmin(request.getRole() == Role.ROLE_ADMIN)
                 .build();
     }
 
@@ -88,6 +89,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .email(request.getEmail())
+                .isAdmin(user.getRole() == Role.ROLE_ADMIN)
                 .build();
     }
 }

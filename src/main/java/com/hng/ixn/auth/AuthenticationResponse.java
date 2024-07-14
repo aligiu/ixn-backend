@@ -14,4 +14,5 @@ public class AuthenticationResponse {
     private String token;
     private String errorMessage;
     private String email;
+    private Boolean isAdmin;
 }
