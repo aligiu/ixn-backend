@@ -53,18 +53,21 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .email(request.getEmail())
                 .build();
     }
 
     public AuthenticationResponse rejectAsEmailExists(RegisterAdminOrUserRequest request) {
         return AuthenticationResponse.builder()
                 .errorMessage("Email already exists")
+                .email(request.getEmail())
                 .build();
     }
 
     public AuthenticationResponse rejectAsEmailExists(RegisterUserRequest request) {
         return AuthenticationResponse.builder()
                 .errorMessage("Email already exists")
+                .email(request.getEmail())
                 .build();
     }
 
@@ -84,6 +87,7 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .email(request.getEmail())
                 .build();
     }
 }
