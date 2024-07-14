@@ -27,5 +27,14 @@ public class DataInitializer implements CommandLineRunner {
                     .build();
             userRepository.save(admin);
         }
+        // second admin with username and password as "a" for fast testing
+        if (userRepository.findByEmail("a").isEmpty()) {
+            User admin = User.builder()
+                    .email("a")
+                    .password(passwordEncoder.encode("a"))
+                    .role(Role.ROLE_ADMIN)
+                    .build();
+            userRepository.save(admin);
+        }
     }
 }
