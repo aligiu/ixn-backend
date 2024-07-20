@@ -49,7 +49,14 @@ public class DataInitializer {
                     .build();
             userRepository.save(admin);
         }
-
+        if (userRepository.findByEmail("user@example.com").isEmpty()) {
+            User user = User.builder()
+                    .email("a")
+                    .password(passwordEncoder.encode("SecurePassword123"))
+                    .role(Role.ROLE_USER)
+                    .build();
+            userRepository.save(user);
+        }
         if (userRepository.findByEmail("a").isEmpty()) {
             User admin = User.builder()
                     .email("a")
