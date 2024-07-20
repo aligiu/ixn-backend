@@ -1,6 +1,6 @@
 -- Clear existing data from the content table and pk sequences
 
---TRUNCATE TABLE content RESTART IDENTITY CASCADE;
+TRUNCATE TABLE content RESTART IDENTITY CASCADE;
 
 
 -- Insert new data
