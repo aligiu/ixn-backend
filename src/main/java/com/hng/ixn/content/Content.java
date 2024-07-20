@@ -39,4 +39,7 @@ public class Content {
     @Column(nullable = false, updatable = false)
     private LocalDateTime timestamp;
 
+    @Column
+    private String secret;
+
 }
