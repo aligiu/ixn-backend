@@ -10,10 +10,13 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  # Comment out to pre-populate data
+#      ddl-auto: create  # Uncomment to pre-populate data
     properties:
       hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
+        hbm2ddl:
+          import_files: classpath:import.sql # Uncomment to pre-populate data
+      defer-datasource-initialization: true
 
 logging:
   level:

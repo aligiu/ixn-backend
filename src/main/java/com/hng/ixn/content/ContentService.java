@@ -3,6 +3,10 @@ package com.hng.ixn.content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +21,13 @@ public class ContentService {
     }
 
     public List<Content> getAllContent() {
-        return contentRepository.findAll();
+        List<Content> contents = contentRepository.findAll();
+        return filterSecrets(contents);
     }
 
     public List<Content> getLatestContent() {
-        return contentRepository.findAllWithMaxTimestamp();
+        List<Content> contents = contentRepository.findAllWithMaxTimestamp();
+        return filterSecrets(contents);
     }
 
     public List<Content> saveMultipleContent(List<ContentDTO> contentDTOs) {
@@ -32,8 +38,22 @@ public class ContentService {
                 .content(dto.getContent())
                 .nextId(dto.getNextId())
                 .prevId(dto.getPrevId())
+                .secret(dto.getSecret())
                 .timestamp(dto.getTimestamp() != null ? dto.getTimestamp() : LocalDateTime.now())
                 .build()).collect(Collectors.toList());
         return contentRepository.saveAll(contents);
+    }
+
+    private List<Content> filterSecrets(List<Content> contents) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean hasRequiredRole = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals("ROLE_ADMIN") || role.equals("ROLE_USER"));
+
+        if (!hasRequiredRole) {
+            contents.forEach(content -> content.setSecret(null));
+        }
+
+        return contents;
     }
 }

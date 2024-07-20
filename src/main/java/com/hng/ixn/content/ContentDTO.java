@@ -18,6 +18,7 @@ public class ContentDTO {
     private String content;
     private Integer nextId;
     private Integer prevId;
+    private String secret;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
