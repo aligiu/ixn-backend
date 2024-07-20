@@ -10,23 +10,22 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-#      ddl-auto: update  # Comment out to pre-populate data
-      ddl-auto: create  # Uncomment to pre-populate data
-
-#    properties:
-#      hibernate:
-#        hbm2ddl:
-##          import_files: classpath:data.sql # Uncomment to pre-populate data
-##      defer-datasource-initialization: true
-#  sql:
-#    init:
-#      mode: always  # Executes `schema.sql` and `data.sql`
+      ddl-auto: update  # Retains data
+#      ddl-auto: create  # Drops all data
 
 logging:
   level:
     root: INFO
 
-#application:
-#  security:
-#    jwt:
-#      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+data:
+  initialize: false  # controls whether to init data in DataInitializer.java
+#  initialize: true  # controls whether to init data in DataInitializer.java
+
+# (spring.jpa.hibernate.ddl-auto, data.initialize)
+# Normally: (update, false)
+# Reset: (create, true)
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
