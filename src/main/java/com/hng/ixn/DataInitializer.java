@@ -51,7 +51,7 @@ public class DataInitializer {
         }
         if (userRepository.findByEmail("user@example.com").isEmpty()) {
             User user = User.builder()
-                    .email("a")
+                    .email("user@example.com")
                     .password(passwordEncoder.encode("SecurePassword123"))
                     .role(Role.ROLE_USER)
                     .build();

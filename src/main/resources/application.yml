@@ -10,16 +10,16 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update  # Retains data
-#      ddl-auto: create  # Drops all data
+      ddl-auto: update  # Retains data [STEP 1/2]
+#      ddl-auto: create  # Drops all data [STEP 1/2]
 
 logging:
   level:
     root: INFO
 
 data:
-  initialize: false  # controls whether to init data in DataInitializer.java
-#  initialize: true  # controls whether to init data in DataInitializer.java
+  initialize: false  # controls whether to init data in DataInitializer.java [STEP 2/2]
+#  initialize: true  # controls whether to init data in DataInitializer.java [STEP 2/2]
 
 # (spring.jpa.hibernate.ddl-auto, data.initialize)
 # Normally: (update, false)
