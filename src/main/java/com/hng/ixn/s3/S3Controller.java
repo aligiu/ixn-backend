@@ -1,6 +1,7 @@
 package com.hng.ixn.s3;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+
 import java.io.FileInputStream;
 
 @RestController
@@ -33,18 +36,27 @@ public class S3Controller {
     }
 
     @GetMapping("/download")
-    public ResponseEntity<InputStreamResource> downloadFile(@RequestParam("fileName") String fileName) throws IOException {
-        String bucketName = "ixn-radio";
-        String downloadPath = System.getProperty("java.io.tmpdir") + "/" + fileName;
+    public ResponseEntity<?> downloadFile(@RequestParam("fileName") String fileName) {
+        try {
+            String bucketName = "ixn-radio";
+            String downloadPath = System.getProperty("java.io.tmpdir") + "/" + fileName;
 
-        File file = s3Service.downloadFile(bucketName, fileName, downloadPath);
+            File file = s3Service.downloadFile(bucketName, fileName, downloadPath);
 
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            if (!file.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found in the local directory.");
+            }
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .contentLength(file.length())
-                .body(resource);
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentLength(file.length())
+                    .body(resource);
+        } catch (NoSuchKeyException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File with key '" + fileName + "' not found in S3 bucket.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error downloading file: " + e.getMessage());
+        }
     }
 }
