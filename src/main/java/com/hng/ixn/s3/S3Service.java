@@ -64,30 +64,35 @@ public class S3Service {
     }
 
     public List<FileDetails> listFiles() {
-
         ListObjectsV2Request listObjects = ListObjectsV2Request.builder()
                 .bucket(bucketName)
                 .build();
 
         ListObjectsV2Response response = s3Client.listObjectsV2(listObjects);
 
+        // Assuming folderId is embedded in the key and is always the first part
         return response.contents().stream()
-                .map(s3Object -> new FileDetails(
-                        s3Object.key(),
-                        generatePresignedUrl(s3Object.key())
-                ))
+                .map(s3Object -> {
+                    String key = s3Object.key();
+                    String[] parts = key.split("/", 2);
+                    String folderId = parts[0];
+                    String fileName = parts.length > 1 ? parts[1] : key;
+                    return new FileDetails(folderId, fileName, generateDownloadUrl(folderId, fileName));
+                })
                 .collect(Collectors.toList());
     }
 
-    private String generatePresignedUrl(String key) {
-        return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toString();
+    private String generateDownloadUrl(String folderId, String fileName) {
+        // Replace with actual path to download the file
+        return "/api/files/download/" + folderId + "?fileName=" + fileName;
     }
 
     @Value
     @AllArgsConstructor
     public static class FileDetails {
+        private final String folderId;
         private final String fileName;
-        private final String downloadUrl;
+        private final String downloadRoute;
     }
 
 }
