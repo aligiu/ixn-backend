@@ -63,12 +63,10 @@ public class S3Service {
         return file;
     }
 
-    public List<FileDetails> listFiles(String bucketId) {
-        // Assume bucketName is derived from bucketId in your application
-        // If bucketName changes based on bucketId, include that logic here.
+    public List<FileDetails> listFiles() {
 
         ListObjectsV2Request listObjects = ListObjectsV2Request.builder()
-                .bucket(bucketName) // Use bucketName based on bucketId if needed
+                .bucket(bucketName)
                 .build();
 
         ListObjectsV2Response response = s3Client.listObjectsV2(listObjects);

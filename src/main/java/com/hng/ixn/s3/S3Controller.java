@@ -72,9 +72,9 @@ public class S3Controller {
         }
     }
 
-    @GetMapping("/list/{folderId}")
-    public ResponseEntity<List<S3Service.FileDetails>> listFiles(@PathVariable String bucketId) {
-        List<S3Service.FileDetails> files = s3Service.listFiles(bucketId);
+    @GetMapping("/list-all")
+    public ResponseEntity<List<S3Service.FileDetails>> listFiles() {
+        List<S3Service.FileDetails> files = s3Service.listFiles();
         return ResponseEntity.ok(files);
     }
 
