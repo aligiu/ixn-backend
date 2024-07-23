@@ -19,6 +19,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class S3Service {
@@ -57,6 +61,35 @@ public class S3Service {
         }
 
         return file;
+    }
+
+    public List<FileDetails> listFiles(String bucketId) {
+        // Assume bucketName is derived from bucketId in your application
+        // If bucketName changes based on bucketId, include that logic here.
+
+        ListObjectsV2Request listObjects = ListObjectsV2Request.builder()
+                .bucket(bucketName) // Use bucketName based on bucketId if needed
+                .build();
+
+        ListObjectsV2Response response = s3Client.listObjectsV2(listObjects);
+
+        return response.contents().stream()
+                .map(s3Object -> new FileDetails(
+                        s3Object.key(),
+                        generatePresignedUrl(s3Object.key())
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private String generatePresignedUrl(String key) {
+        return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toString();
+    }
+
+    @Value
+    @AllArgsConstructor
+    public static class FileDetails {
+        private final String fileName;
+        private final String downloadUrl;
     }
 
 }

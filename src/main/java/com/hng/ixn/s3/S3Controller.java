@@ -26,15 +26,15 @@ public class S3Controller {
     private S3Service s3Service;
 
     @PreAuthorize("hasRole('ADMIN')")  // only admins can upload files
-    @PostMapping("/upload/{bucketId}")
-    public ResponseEntity<String> uploadFile(@PathVariable int bucketId, @RequestParam("file") MultipartFile file) {
+    @PostMapping("/upload/{folderId}")
+    public ResponseEntity<String> uploadFile(@PathVariable int folderId, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             // Handle the case where the file is missing
             return ResponseEntity.badRequest().body("No file provided.");
         }
 
         try {
-            String key = bucketId + "/" + file.getOriginalFilename(); // Use the id and the file name for the key
+            String key = folderId + "/" + file.getOriginalFilename(); // Use the id and the file name for the key
 
             // Convert MultipartFile to File
             File convertedFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
@@ -47,10 +47,10 @@ public class S3Controller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file: " + e.getMessage());
         }
     }
-    @GetMapping("/download/{bucketId}")
-    public ResponseEntity<?> downloadFile(@PathVariable int bucketId, @RequestParam("fileName") String fileName) {
+    @GetMapping("/download/{folderId}")
+    public ResponseEntity<?> downloadFile(@PathVariable int folderId, @RequestParam("fileName") String fileName) {
         try {
-            String key = bucketId + "/" + fileName;
+            String key = folderId + "/" + fileName;
             String downloadPath = System.getProperty("java.io.tmpdir") + "/" + fileName;
 
             File file = s3Service.downloadFile(key, downloadPath);
@@ -70,6 +70,12 @@ public class S3Controller {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error downloading file: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/list/{folderId}")
+    public ResponseEntity<List<S3Service.FileDetails>> listFiles(@PathVariable String bucketId) {
+        List<S3Service.FileDetails> files = s3Service.listFiles(bucketId);
+        return ResponseEntity.ok(files);
     }
 
 }
