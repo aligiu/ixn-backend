@@ -29,4 +29,10 @@ public class S3Config {
                 .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                 .build();
     }
+
+    @Bean
+    public String bucketName() {
+        return BUCKET_NAME;
+    }
+
 }

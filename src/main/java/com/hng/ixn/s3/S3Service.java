@@ -1,6 +1,8 @@
 package com.hng.ixn.s3;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,16 +20,13 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class S3Service {
 
     private final S3Client s3Client;
+    private final String bucketName; // Injected from S3Config
 
-    // Constructor injection
-    public S3Service(S3Client s3Client) {
-        this.s3Client = s3Client;
-    }
-
-    public String uploadFile(String bucketName, String key, String filePath) {
+    public String uploadFile(String key, String filePath) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
@@ -38,7 +37,7 @@ public class S3Service {
         return putObjectResponse.eTag();
     }
 
-    public File downloadFile(String bucketName, String key, String downloadPath) throws IOException {
+    public File downloadFile(String key, String downloadPath) throws IOException {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)

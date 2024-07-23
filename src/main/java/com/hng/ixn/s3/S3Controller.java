@@ -25,8 +25,6 @@ public class S3Controller {
     @Autowired
     private S3Service s3Service;
 
-    String bucketName = "ixn-radio";
-
     @PreAuthorize("hasRole('ADMIN')")  // only admins can upload files
     @PostMapping("/upload/{bucketId}")
     public ResponseEntity<String> uploadFile(@PathVariable int bucketId, @RequestParam("file") MultipartFile file) {
@@ -37,7 +35,7 @@ public class S3Controller {
             File convertedFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
             file.transferTo(convertedFile);
 
-            String eTag = s3Service.uploadFile(bucketName, key, convertedFile.getPath());
+            String eTag = s3Service.uploadFile(key, convertedFile.getPath());
             return ResponseEntity.ok("File uploaded successfully. ETag: " + eTag);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file: " + e.getMessage());
@@ -50,7 +48,7 @@ public class S3Controller {
             String key = bucketId + "/" + fileName;
             String downloadPath = System.getProperty("java.io.tmpdir") + "/" + fileName;
 
-            File file = s3Service.downloadFile(bucketName, key, downloadPath);
+            File file = s3Service.downloadFile(key, downloadPath);
 
             if (!file.exists()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found in the local directory.");
