@@ -1,5 +1,7 @@
 package com.hng.ixn.s3;
 
+import lombok.Getter;
+import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -13,12 +15,17 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Service
 public class S3Service {
 
-    @Autowired
-    private S3Client s3Client;
+    private final S3Client s3Client;
+
+    // Constructor injection
+    public S3Service(S3Client s3Client) {
+        this.s3Client = s3Client;
+    }
 
     public String uploadFile(String bucketName, String key, String filePath) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -52,4 +59,5 @@ public class S3Service {
 
         return file;
     }
+
 }

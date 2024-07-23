@@ -2,6 +2,7 @@ package com.hng.ixn.s3;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 import java.io.FileInputStream;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/files")
@@ -23,25 +25,32 @@ public class S3Controller {
     @Autowired
     private S3Service s3Service;
 
-    @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        String bucketName = "ixn-radio";
-        String key = file.getOriginalFilename();
+    String bucketName = "ixn-radio";
 
-        // Convert MultipartFile to File
-        File convertedFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
-        file.transferTo(convertedFile);
+    @PreAuthorize("hasRole('ADMIN')")  // only admins can upload files
+    @PostMapping("/upload/{bucketId}")
+    public ResponseEntity<String> uploadFile(@PathVariable int bucketId, @RequestParam("file") MultipartFile file) {
+        try {
+            String key = bucketId + "/" + file.getOriginalFilename(); // Use the id and the file name for the key
 
-        return s3Service.uploadFile(bucketName, key, convertedFile.getPath());
+            // Convert MultipartFile to File
+            File convertedFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
+            file.transferTo(convertedFile);
+
+            String eTag = s3Service.uploadFile(bucketName, key, convertedFile.getPath());
+            return ResponseEntity.ok("File uploaded successfully. ETag: " + eTag);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file: " + e.getMessage());
+        }
     }
 
-    @GetMapping("/download")
-    public ResponseEntity<?> downloadFile(@RequestParam("fileName") String fileName) {
+    @GetMapping("/download/{bucketId}")
+    public ResponseEntity<?> downloadFile(@PathVariable int bucketId, @RequestParam("fileName") String fileName) {
         try {
-            String bucketName = "ixn-radio";
+            String key = bucketId + "/" + fileName;
             String downloadPath = System.getProperty("java.io.tmpdir") + "/" + fileName;
 
-            File file = s3Service.downloadFile(bucketName, fileName, downloadPath);
+            File file = s3Service.downloadFile(bucketName, key, downloadPath);
 
             if (!file.exists()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found in the local directory.");
@@ -59,4 +68,5 @@ public class S3Controller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error downloading file: " + e.getMessage());
         }
     }
+
 }
