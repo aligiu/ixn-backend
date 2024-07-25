@@ -27,7 +27,7 @@ public class S3Controller {
 
     @PreAuthorize("hasRole('ADMIN')")  // only admins can upload files
     @PostMapping("/upload/{folderId}")
-    public ResponseEntity<String> uploadFile(@PathVariable int folderId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadFile(@PathVariable String folderId, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             // Handle the case where the file is missing
             return ResponseEntity.badRequest().body("No file provided.");
@@ -48,7 +48,7 @@ public class S3Controller {
         }
     }
     @GetMapping("/download/{folderId}")
-    public ResponseEntity<?> downloadFile(@PathVariable int folderId, @RequestParam("fileName") String fileName) {
+    public ResponseEntity<?> downloadFile(@PathVariable String folderId, @RequestParam("fileName") String fileName) {
         try {
             String key = folderId + "/" + fileName;
             String downloadPath = System.getProperty("java.io.tmpdir") + "/" + fileName;
@@ -72,9 +72,15 @@ public class S3Controller {
         }
     }
 
-    @GetMapping("/list-all")
-    public ResponseEntity<List<S3Service.FileDetails>> listFiles() {
+    @GetMapping("/list/all")
+    public ResponseEntity<List<S3Service.FileDetails>> listFilesAll() {
         List<S3Service.FileDetails> files = s3Service.listFiles();
+        return ResponseEntity.ok(files);
+    }
+
+    @GetMapping("/list/{folderId}")
+    public ResponseEntity<List<S3Service.FileDetails>> listFilesOfFolder(@PathVariable String folderId) {
+        List<S3Service.FileDetails> files = s3Service.listFiles(folderId);
         return ResponseEntity.ok(files);
     }
 

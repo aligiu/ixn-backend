@@ -65,6 +65,14 @@ public class DataInitializer {
                     .build();
             userRepository.save(admin);
         }
+        if (userRepository.findByEmail("u").isEmpty()) {
+            User user = User.builder()
+                    .email("u")
+                    .password(passwordEncoder.encode("u"))
+                    .role(Role.ROLE_USER)
+                    .build();
+            userRepository.save(user);
+        }
         System.out.println("Users initialized");
     }
 

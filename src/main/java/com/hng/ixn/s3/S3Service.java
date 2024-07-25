@@ -63,6 +63,10 @@ public class S3Service {
         return file;
     }
 
+    public List<FileDetails> listFiles(String folderId) {
+        return listFiles().stream().filter(file -> file.folderId.equals(folderId)).collect(Collectors.toList());
+    }
+
     public List<FileDetails> listFiles() {
         ListObjectsV2Request listObjects = ListObjectsV2Request.builder()
                 .bucket(bucketName)
@@ -84,7 +88,7 @@ public class S3Service {
 
     private String generateDownloadUrl(String folderId, String fileName) {
         // Replace with actual path to download the file
-        return "/api/files/download/" + folderId + "?fileName=" + fileName;
+        return "/files/download/" + folderId + "?fileName=" + fileName;
     }
 
     @Value
