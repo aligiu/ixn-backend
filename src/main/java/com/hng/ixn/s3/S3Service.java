@@ -6,11 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -18,10 +14,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.stream.Collectors;
+import java.util.List;
 
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,17 @@ public class S3Service {
         PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, Paths.get(filePath));
 
         return putObjectResponse.eTag();
+    }
+
+    public void deleteFile(String key) {
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        DeleteObjectResponse deleteObjectResponse = s3Client.deleteObject(deleteObjectRequest);
+
+        // Optionally, you can check the deleteObjectResponse for any response details
     }
 
     public File downloadFile(String key, String downloadPath) throws IOException {

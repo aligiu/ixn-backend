@@ -47,6 +47,21 @@ public class S3Controller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file: " + e.getMessage());
         }
     }
+
+    @PreAuthorize("hasRole('ADMIN')")  // only admins can delete files
+    @DeleteMapping("/delete/{folderId}")
+    public ResponseEntity<String> deleteFile(@PathVariable String folderId, @RequestParam("fileName") String fileName) {
+        try {
+            String key = folderId + "/" + fileName;
+            s3Service.deleteFile(key);
+            return ResponseEntity.ok("File deleted successfully.");
+        } catch (NoSuchKeyException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File with key '" + fileName + "' not found in S3 bucket.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting file: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/download/{folderId}")
     public ResponseEntity<?> downloadFile(@PathVariable String folderId, @RequestParam("fileName") String fileName) {
         try {
