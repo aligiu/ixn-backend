@@ -106,7 +106,7 @@ public class DataInitializer {
                         .id(3)
                         .title("Frimley")
                         .description("Details about the Frimley Health NHS Foundation Trust.")
-                        .content("")
+                        .content("Fake content without tags... In the realm of quantum communication, one wants to send qubits from one quantum processor to another over long distances.[3] This way, local quantum networks can be intra connected into a quantum internet. A quantum internet[1] supports many applications, which derive their power from the fact that by creating quantum entangled qubits, information can be transmitted between the remote quantum processors. Most applications of a quantum internet require only very modest quantum processors. For most quantum internet protocols, such as quantum key distribution in quantum cryptography, it is sufficient if these processors are capable of preparing and measuring only a single qubit at a time. This is in contrast to quantum computing where interesting applications can be realized only if the (combined) quantum processors can easily simulate more qubits than a classical computer (around 60[4]). Quantum internet applications require only small quantum processors, often just a single qubit, because quantum entanglement can already be realized between just two qubits. A simulation of an entangled quantum system on a classical computer cannot simultaneously provide the same security and speed.")
                         .nextId(4)
                         .prevId(2)
                         .timestamp(LocalDateTime.parse("2024-07-10T02:37:04"))
