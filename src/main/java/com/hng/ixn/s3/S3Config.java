@@ -15,8 +15,8 @@ public class S3Config {
 
     @Bean
     public S3Client s3Client() {
-        String accessKey = System.getenv("AWS_IXN_USER_ACCESS_KEY");
-        String secretKey = System.getenv("AWS_IXN_USER_SECRET_KEY");
+        String accessKey = System.getenv("IXN_AWS_USER_ACCESS_KEY");
+        String secretKey = System.getenv("IXN_AWS_USER_SECRET_KEY");
 
         if (accessKey == null || secretKey == null) {
             throw new IllegalArgumentException("AWS credentials not set in environment variables");
