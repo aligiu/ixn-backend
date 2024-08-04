@@ -1,10 +1,10 @@
 spring:
-  security:
-    user:
-      name: x
-      password: x
+#  security:
+#    user:
+#      name: x
+#      password: x
   datasource:
-    url: jdbc:postgresql://${IXN_POSTGRES_HOST}:${IXN_POSTGRES_PORT}/${IXN_POSTGRES_DB}
+    url: jdbc:${IXN_POSTGRES_URL}
     username: ${IXN_POSTGRES_USERNAME}
     password: ${IXN_POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
