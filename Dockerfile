@@ -1,5 +1,5 @@
-# Use a Maven image with JDK 22 to build the jar
-FROM maven:3.8.5-eclipse-temurin-22 AS build
+# Use a Maven image with JDK 17 to build the jar
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 
 # Copy the pom.xml and source code
@@ -9,8 +9,8 @@ COPY src ./src
 # Build the application
 RUN mvn clean package -DskipTests
 
-# Use an Eclipse Temurin JDK 22 runtime image to run the application
-FROM eclipse-temurin:22-jre
+# Use an openjdk 17 runtime image to run the application
+FROM  openjdk:17.0.1-jdk-slim
 WORKDIR /app
 
 # Copy the jar file from the Maven build stage
