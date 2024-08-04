@@ -12,6 +12,9 @@ spring:
     hibernate:
       ddl-auto: update  # Retains data [STEP 1/2]
 #      ddl-auto: create  # Drops all data [STEP 1/2]
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
   level:
