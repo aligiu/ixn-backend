@@ -4,7 +4,7 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_DB: ixn
+      POSTGRES_DB: ${IXN_POSTGRES_DB}
       POSTGRES_USER: ${IXN_POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${IXN_POSTGRES_PASSWORD}
     ports:
