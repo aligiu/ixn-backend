@@ -20,4 +20,4 @@ COPY --from=build /app/target/ixn-0.0.1-SNAPSHOT.jar ixn-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "/ixn-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "ixn-0.0.1-SNAPSHOT.jar"]
