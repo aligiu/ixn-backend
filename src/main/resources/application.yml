@@ -4,7 +4,7 @@ spring:
       name: x
       password: x
   datasource:
-    url: jdbc:postgresql://localhost:5432/ixn
+    url: jdbc:postgresql://${IXN_POSTGRES_HOST}:${IXN_POSTGRES_PORT}/ixn
     username: ${IXN_POSTGRES_USERNAME}
     password: ${IXN_POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
