@@ -1,8 +1,8 @@
 spring:
-#  security:
-#    user:
-#      name: x
-#      password: x
+  #  security:
+  #    user:
+  #      name: x
+  #      password: x
   datasource:
     url: jdbc:${IXN_POSTGRES_URL}
     username: ${IXN_POSTGRES_USERNAME}
@@ -11,14 +11,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update  # Retains data [STEP 1/2]
-#      ddl-auto: create  # Drops all data [STEP 1/2]
+#          ddl-auto: create  # Drops all data [STEP 1/2]
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
 logging:
   level:
     root: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 data:
   initialize: false  # controls whether to init data in DataInitializer.java [STEP 2/2]
