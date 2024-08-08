@@ -14,10 +14,6 @@ import java.util.List;
 public class ContentController {
 
     private final ContentService contentService;
-    @GetMapping("/some")
-    public String home() {
-        return "You are viewing content";
-    }
 
     @GetMapping("")
     public ResponseEntity<List<Content>> getAllContent() {
