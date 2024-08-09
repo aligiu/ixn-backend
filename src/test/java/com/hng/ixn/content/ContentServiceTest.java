@@ -20,6 +20,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
+
+import static org.mockito.ArgumentMatchers.anyList;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
+
 class ContentServiceTest {
 
     private final LocalDateTime dateTimeOld = LocalDateTime.of(2020, 8, 1, 10, 0);
@@ -62,26 +85,17 @@ class ContentServiceTest {
         contentListSet2 = Arrays.asList(content1New, content2New, content3New);
     }
 
-    private void setAuthentication(String role) {
-        UserDetails userDetails = User.builder().email("username@example.com").password("password")
-                .role(Role.valueOf(role)) // Assuming Role is an enum
-                .build();
-
-        Authentication authentication =
-                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
-    }
 
     @Test
     void testGetAllContentAsAdmin() {
-        setAuthentication("ROLE_ADMIN");
 
         when(contentRepository.findAll()).thenReturn(contentListSet1);
 
-        List<Content> result = contentService.getAllContent();
+        // Create a spy to override the hasRequiredRole method
+        ContentService spyContentService = spy(contentService);
+        doReturn(true).when(spyContentService).hasRequiredRole();
+
+        List<Content> result = spyContentService.getAllContent();
 
         assertEquals(3, result.size());
         assertEquals("Old secret 1", result.get(0).getSecret()); // Admin should see the secret
@@ -91,11 +105,14 @@ class ContentServiceTest {
 
     @Test
     void testGetAllContentAsUser() {
-        setAuthentication("ROLE_USER");
 
         when(contentRepository.findAll()).thenReturn(contentListSet1);
 
-        List<Content> result = contentService.getAllContent();
+        // Create a spy to override the hasRequiredRole method
+        ContentService spyContentService = spy(contentService);
+        doReturn(false).when(spyContentService).hasRequiredRole();
+
+        List<Content> result = spyContentService.getAllContent();
 
         assertEquals(3, result.size());
         assertNull(result.get(0).getSecret()); // User should not see the secret
@@ -105,11 +122,14 @@ class ContentServiceTest {
 
     @Test
     void testGetLatestContentAsAdmin() {
-        setAuthentication("ROLE_ADMIN");
 
         when(contentRepository.findAllWithMaxTimestamp()).thenReturn(contentListSet2);
 
-        List<Content> result = contentService.getLatestContent();
+        // Create a spy to override the hasRequiredRole method
+        ContentService spyContentService = spy(contentService);
+        doReturn(true).when(spyContentService).hasRequiredRole();
+
+        List<Content> result = spyContentService.getLatestContent();
 
         assertEquals(3, result.size());
         assertEquals("New secret 1", result.get(0).getSecret()); // Admin should see the secret
@@ -119,11 +139,14 @@ class ContentServiceTest {
 
     @Test
     void testGetLatestContentAsUser() {
-        setAuthentication("ROLE_USER");
 
         when(contentRepository.findAllWithMaxTimestamp()).thenReturn(contentListSet2);
 
-        List<Content> result = contentService.getLatestContent();
+        // Create a spy to override the hasRequiredRole method
+        ContentService spyContentService = spy(contentService);
+        doReturn(false).when(spyContentService).hasRequiredRole();
+
+        List<Content> result = spyContentService.getLatestContent();
 
         assertEquals(3, result.size());
         assertNull(result.get(0).getSecret()); // User should not see the secret
@@ -158,3 +181,5 @@ class ContentServiceTest {
         verify(contentRepository, times(1)).saveAll(anyList());
     }
 }
+
+

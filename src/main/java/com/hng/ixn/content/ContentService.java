@@ -44,16 +44,17 @@ public class ContentService {
         return contentRepository.saveAll(contents);
     }
 
-    private List<Content> filterSecrets(List<Content> contents) {
+    protected boolean hasRequiredRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean hasRequiredRole = authentication.getAuthorities().stream()
+        return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(role -> role.equals("ROLE_ADMIN") || role.equals("ROLE_USER"));
+    }
 
-        if (!hasRequiredRole) {
+    private List<Content> filterSecrets(List<Content> contents) {
+        if (!hasRequiredRole()) {
             contents.forEach(content -> content.setSecret(null));
         }
-
         return contents;
     }
 }
