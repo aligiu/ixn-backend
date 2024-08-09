@@ -91,7 +91,7 @@ class ContentServiceTest {
 
     @Test
     void testGetAllContentAsUser() {
-        setAuthentication("ROLE_ADMIN");
+        setAuthentication("ROLE_USER");
 
         when(contentRepository.findAll()).thenReturn(contentListSet1);
 
