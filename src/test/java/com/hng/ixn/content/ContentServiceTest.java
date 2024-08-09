@@ -1,16 +1,10 @@
 package com.hng.ixn.content;
 
-import com.hng.ixn.user.Role;
-import com.hng.ixn.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -19,29 +13,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
-
-
 import static org.mockito.ArgumentMatchers.anyList;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
 
 class ContentServiceTest {
 
@@ -87,7 +60,7 @@ class ContentServiceTest {
 
 
     @Test
-    void testGetAllContentAsAdmin() {
+    void testGetAllContentAsAuthorised() {
 
         when(contentRepository.findAll()).thenReturn(contentListSet1);
 
@@ -98,13 +71,13 @@ class ContentServiceTest {
         List<Content> result = spyContentService.getAllContent();
 
         assertEquals(3, result.size());
-        assertEquals("Old secret 1", result.get(0).getSecret()); // Admin should see the secret
-        assertEquals("Old secret 2", result.get(1).getSecret()); // Admin should see the secret
-        assertEquals("Old secret 3", result.get(2).getSecret()); // Admin should see the secret
+        assertEquals("Old secret 1", result.get(0).getSecret()); // Authorised roles (admins) should see the secret
+        assertEquals("Old secret 2", result.get(1).getSecret()); // Authorised roles (admins) should see the secret
+        assertEquals("Old secret 3", result.get(2).getSecret()); // Authorised roles (admins) should see the secret
     }
 
     @Test
-    void testGetAllContentAsUser() {
+    void testGetAllContentUnauthorised() {
 
         when(contentRepository.findAll()).thenReturn(contentListSet1);
 
@@ -115,13 +88,13 @@ class ContentServiceTest {
         List<Content> result = spyContentService.getAllContent();
 
         assertEquals(3, result.size());
-        assertNull(result.get(0).getSecret()); // User should not see the secret
-        assertNull(result.get(1).getSecret()); // User should not see the secret
-        assertNull(result.get(2).getSecret()); // User should not see the secret
+        assertNull(result.get(0).getSecret()); // Unauthorised roles (users and guests) should not see the secret
+        assertNull(result.get(1).getSecret()); // Unauthorised roles (users and guests) should not see the secret
+        assertNull(result.get(2).getSecret()); // Unauthorised roles (users and guests) should not see the secret
     }
 
     @Test
-    void testGetLatestContentAsAdmin() {
+    void testGetLatestContentAsAuthorised() {
 
         when(contentRepository.findAllWithMaxTimestamp()).thenReturn(contentListSet2);
 
@@ -132,13 +105,13 @@ class ContentServiceTest {
         List<Content> result = spyContentService.getLatestContent();
 
         assertEquals(3, result.size());
-        assertEquals("New secret 1", result.get(0).getSecret()); // Admin should see the secret
-        assertEquals("New secret 2", result.get(1).getSecret()); // Admin should see the secret
-        assertEquals("New secret 3", result.get(2).getSecret()); // Admin should see the secret
+        assertEquals("New secret 1", result.get(0).getSecret()); // Authorised roles (admins) should see the secret
+        assertEquals("New secret 2", result.get(1).getSecret()); // Authorised roles (admins) should see the secret
+        assertEquals("New secret 3", result.get(2).getSecret()); // Authorised roles (admins) should see the secret
     }
 
     @Test
-    void testGetLatestContentAsUser() {
+    void testGetLatestContentUnauthorised() {
 
         when(contentRepository.findAllWithMaxTimestamp()).thenReturn(contentListSet2);
 
@@ -149,9 +122,9 @@ class ContentServiceTest {
         List<Content> result = spyContentService.getLatestContent();
 
         assertEquals(3, result.size());
-        assertNull(result.get(0).getSecret()); // User should not see the secret
-        assertNull(result.get(1).getSecret()); // User should not see the secret
-        assertNull(result.get(2).getSecret()); // User should not see the secret
+        assertNull(result.get(0).getSecret()); // Unauthorised roles (users and guests) should not see the secret
+        assertNull(result.get(1).getSecret()); // Unauthorised roles (users and guests) should not see the secret
+        assertNull(result.get(2).getSecret()); // Unauthorised roles (users and guests) should not see the secret
     }
 
     @Test
