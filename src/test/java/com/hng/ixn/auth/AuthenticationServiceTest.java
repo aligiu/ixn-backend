@@ -11,8 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.Optional;
 
@@ -127,9 +130,39 @@ class AuthenticationServiceTest {
         request.setEmail("test@example.com");
         request.setPassword("password123");
 
+        // Mock the user repository to return an empty Optional
         when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> authenticationService.authenticate(request));
-        verify(authenticationManager, never()).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        // Expect a RuntimeException when authenticate is called with a user that does not exist
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> authenticationService.authenticate(request));
+        assertEquals("No value present", thrown.getMessage()); // Assert the exception message is correct
+
+    }
+
+    @Test
+    void authenticateShouldThrowExceptionWhenUserPasswordDoesNotMatch() {
+        AuthenticationRequest request = new AuthenticationRequest();
+        request.setEmail("test@example.com");
+        request.setPassword("incorrectPassword");
+
+        // Mock the user repository to return a user
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword("correctPassword");
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(user));
+
+        // Mock authenticationManager to throw an AuthenticationException when the password does not match
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new BadCredentialsException("Bad credentials"));
+
+        // Expect an AuthenticationException when authenticate is called with incorrect password
+        AuthenticationException thrown = assertThrows(AuthenticationException.class, () -> authenticationService.authenticate(request));
+        assertEquals("Bad credentials", thrown.getMessage()); // Assert the exception message is correct
+
+        // Verify that authenticationManager.authenticate() was called with the correct arguments
+        verify(authenticationManager).authenticate(argThat(token ->
+                token.getPrincipal().equals(request.getEmail()) &&
+                        token.getCredentials().equals(request.getPassword())
+        ));
     }
 }
