@@ -1,8 +1,4 @@
 spring:
-  #  security:
-  #    user:
-  #      name: x
-  #      password: x
   datasource:
     url: jdbc:${IXN_POSTGRES_URL}
     username: ${IXN_POSTGRES_USERNAME}
@@ -28,12 +24,11 @@ data:
   initialize: false  # controls whether to init data in DataInitializer.java [STEP 2/2]
 #  initialize: true  # controls whether to init data in DataInitializer.java [STEP 2/2]
 
-# (spring.jpa.hibernate.ddl-auto, data.initialize)
-# Normally: (update, false)
-# Reset: (create, true)
-
 application:
   security:
     jwt:
       secret-key:
         ${IXN_APP_JWT_SECRET_KEY}
+
+
+
