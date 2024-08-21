@@ -35,7 +35,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterAdminOrUserRequest request) {
         if (repository.existsByEmail(request.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists");
+            throw new RuntimeException("Email already exists");
         }
 
         var user = User.builder().email(request.getEmail()).password(
@@ -62,7 +62,6 @@ public class AuthenticationService {
 
         var user = repository.findByEmail(request.getEmail()).orElseThrow();
         logger.info("*** Authentication successful for user: {}", request.getEmail());
-        System.out.println(repository.findByEmail(request.getEmail()));
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).email(request.getEmail()).isAdmin(
