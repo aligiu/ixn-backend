@@ -63,6 +63,25 @@ class S3ControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
+    void uploadFile_shouldReturnInternalServerErrorOnIOException() throws IOException {
+        // Arrange
+        String folderId = "test-folder";
+        MockMultipartFile mockFile = new MockMultipartFile("file", "test.txt", "text/plain", "some content".getBytes());
+
+        // Create a spy for the MultipartFile to simulate IOException during transferTo
+        MockMultipartFile spyFile = spy(mockFile);
+        doThrow(new IOException("File transfer failed")).when(spyFile).transferTo(any(File.class));
+
+        // Act
+        ResponseEntity<String> response = s3Controller.uploadFile(folderId, spyFile);
+
+        // Assert
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Error uploading file: File transfer failed", response.getBody());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
     void deleteFile_Success() {
         doNothing().when(s3Service).deleteFile(anyString());
 
