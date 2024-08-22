@@ -219,12 +219,12 @@ class S3ControllerTest {
 
     @Test
     void listFilesAll_Success() {
-        List<S3Service.FileDetails> mockFiles = Collections.singletonList(
-                new S3Service.FileDetails("file1", "folder1/file1", "1024L"));
+        List<FileDetails> mockFiles = Collections.singletonList(
+                new FileDetails("file1", "folder1/file1", "1024L"));
 
         when(s3Service.listFiles()).thenReturn(mockFiles);
 
-        ResponseEntity<List<S3Service.FileDetails>> response = s3Controller.listFilesAll();
+        ResponseEntity<List<FileDetails>> response = s3Controller.listFilesAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockFiles, response.getBody());
@@ -233,12 +233,12 @@ class S3ControllerTest {
 
     @Test
     void listFilesOfFolder_Success() {
-        List<S3Service.FileDetails> mockFiles = Collections.singletonList(
-                new S3Service.FileDetails("file1", "folder1/file1", "1024L"));
+        List<FileDetails> mockFiles = Collections.singletonList(
+                new FileDetails("file1", "folder1/file1", "1024L"));
 
         when(s3Service.listFiles("folder1")).thenReturn(mockFiles);
 
-        ResponseEntity<List<S3Service.FileDetails>> response = s3Controller.listFilesOfFolder(
+        ResponseEntity<List<FileDetails>> response = s3Controller.listFilesOfFolder(
                 "folder1");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());

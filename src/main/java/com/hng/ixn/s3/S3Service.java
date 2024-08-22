@@ -78,7 +78,7 @@ public class S3Service {
     }
 
     public List<FileDetails> listFiles(String folderId) {
-        return listFiles().stream().filter(file -> file.folderId.equals(folderId)).collect(Collectors.toList());
+        return listFiles().stream().filter(file -> file.getFolderId().equals(folderId)).collect(Collectors.toList());
     }
 
     public List<FileDetails> listFiles() {
@@ -105,12 +105,5 @@ public class S3Service {
         return "/files/download/" + folderId + "?fileName=" + fileName;
     }
 
-    @Value
-    @AllArgsConstructor
-    public static class FileDetails {
-        private final String folderId;
-        private final String fileName;
-        private final String downloadRoute;
-    }
 
 }

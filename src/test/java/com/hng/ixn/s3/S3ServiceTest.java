@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.hng.ixn.s3.S3Service.FileDetails;
+import com.hng.ixn.s3.FileDetails;
 
 
 class S3ServiceTest {
@@ -110,7 +110,7 @@ class S3ServiceTest {
         when(s3Client.listObjectsV2(any(ListObjectsV2Request.class))).thenReturn(mockResponse);
 
         // Act
-        List<S3Service.FileDetails> fileDetails = s3Service.listFiles();
+        List<FileDetails> fileDetails = s3Service.listFiles();
 
         // Assert
         assertFalse(fileDetails.isEmpty());
@@ -140,7 +140,7 @@ class S3ServiceTest {
         when(s3Client.listObjectsV2(any(ListObjectsV2Request.class))).thenReturn(mockResponse);
 
         // Call the method under test
-        List<S3Service.FileDetails> result = s3Service.listFiles("1");
+        List<FileDetails> result = s3Service.listFiles("1");
 
         // Verify the results
         assertEquals(2, result.size());
