@@ -5,13 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.anyList;
 
@@ -153,6 +158,50 @@ class ContentServiceTest {
 
         verify(contentRepository, times(1)).saveAll(anyList());
     }
+
+    // Helper method to setup SecurityContext with mocked Authentication
+    private void setupSecurityContextWithRoles(List<String> roles) {
+        Authentication authentication = mock(Authentication.class);
+
+        // Create a collection of GrantedAuthority using a more explicit approach
+        Collection<GrantedAuthority> authorities = roles.stream()
+                .map(role -> (GrantedAuthority) () -> role)
+                .collect(Collectors.toList());
+
+        // Use doReturn to avoid type inference issues
+        doReturn(authorities).when(authentication).getAuthorities();
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        doReturn(authentication).when(securityContext).getAuthentication();
+
+        SecurityContextHolder.setContext(securityContext);
+    }
+
+    @Test
+    void testHasRequiredRole_withAdminRole() {
+        setupSecurityContextWithRoles(List.of("ROLE_ADMIN"));
+
+        ContentService service = new ContentService(mock(ContentRepository.class));
+        assertTrue(service.hasRequiredRole(), "The method should return true for ROLE_ADMIN");
+    }
+
+    @Test
+    void testHasRequiredRole_withUserRole() {
+        setupSecurityContextWithRoles(List.of("ROLE_USER"));
+
+        ContentService service = new ContentService(mock(ContentRepository.class));
+        assertTrue(service.hasRequiredRole(), "The method should return true for ROLE_USER");
+    }
+
+    @Test
+    void testHasRequiredRole_withNoRoles() {
+        setupSecurityContextWithRoles(List.of());
+
+        ContentService service = new ContentService(mock(ContentRepository.class));
+        assertFalse(service.hasRequiredRole(), "The method should return false when no roles are present");
+    }
+
+
 }
 
 
