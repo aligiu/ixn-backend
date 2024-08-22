@@ -66,6 +66,54 @@ class AuthenticationServiceTest {
     }
 
     @Test
+    public void registerUserShouldDelegateRegistrationCorrectly() {
+        // Arrange
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+        registerUserRequest.setEmail("test@example.com");
+        registerUserRequest.setLastname("Doe");
+        registerUserRequest.setFirstname("John");
+        registerUserRequest.setPassword("password123");
+
+        RegisterAdminOrUserRequest expectedRequest = new RegisterAdminOrUserRequest();
+        expectedRequest.setEmail("test@example.com");
+        expectedRequest.setLastname("Doe");
+        expectedRequest.setFirstname("John");
+        expectedRequest.setPassword("password123");
+        expectedRequest.setRole(Role.ROLE_USER);
+
+        User user = User.builder()
+                .email("test@example.com")
+                .password("encoded-password")
+                .role(Role.ROLE_USER)
+                .build();
+
+        String generatedToken = "generated-token";
+        AuthenticationResponse expectedResponse = AuthenticationResponse.builder()
+                .token(generatedToken)
+                .email("test@example.com")
+                .isAdmin(false)
+                .build();
+
+        // Mock the behavior of the JWT service and user repository
+        when(userRepository.existsByEmail(expectedRequest.getEmail())).thenReturn(false);
+        when(passwordEncoder.encode(registerUserRequest.getPassword())).thenReturn("encoded-password");
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(jwtService.generateToken(user)).thenReturn(generatedToken);
+
+        // Act
+        AuthenticationResponse actualResponse = authenticationService.register(registerUserRequest);
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
+
+        // Verify interactions with the mocked services
+        verify(userRepository).existsByEmail(expectedRequest.getEmail());
+        verify(passwordEncoder).encode(registerUserRequest.getPassword());
+        verify(userRepository).save(any(User.class));
+        verify(jwtService).generateToken(user);
+    }
+
+    @Test
     void registerShouldThrowExceptionWhenEmailExists() {
         RegisterAdminOrUserRequest request = new RegisterAdminOrUserRequest();
         request.setEmail("test@example.com");
