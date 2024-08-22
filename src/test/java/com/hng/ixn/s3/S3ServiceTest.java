@@ -16,12 +16,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.hng.ixn.s3.S3Service.FileDetails;
 
 
 class S3ServiceTest {
@@ -98,7 +103,7 @@ class S3ServiceTest {
 
 
     @Test
-    void listFiles() {
+    void listAllFiles() {
         // Arrange
         ListObjectsV2Response mockResponse = ListObjectsV2Response.builder().contents(
                 List.of(S3Object.builder().key("folder1/file1.txt").build())).build();
@@ -113,5 +118,33 @@ class S3ServiceTest {
         assertEquals("file1.txt", fileDetails.get(0).getFileName());
         assertEquals("/files/download/folder1?fileName=file1.txt",
                 fileDetails.get(0).getDownloadRoute());
+    }
+
+    @Test
+    public void testListFiles() {
+        // Mock S3 objects
+        S3Object s3Object1 = mock(S3Object.class);
+        S3Object s3Object2 = mock(S3Object.class);
+        S3Object s3Object3 = mock(S3Object.class);
+
+        // Setup S3 object keys
+        when(s3Object1.key()).thenReturn("1/file1.txt");
+        when(s3Object2.key()).thenReturn("1/file2.txt");
+        when(s3Object3.key()).thenReturn("2/file3.txt");
+
+        // Mock the S3 response
+        ListObjectsV2Response mockResponse = mock(ListObjectsV2Response.class);
+        when(mockResponse.contents()).thenReturn(Arrays.asList(s3Object1, s3Object2, s3Object3));
+
+        // Mock the S3 client to return the mocked response
+        when(s3Client.listObjectsV2(any(ListObjectsV2Request.class))).thenReturn(mockResponse);
+
+        // Call the method under test
+        List<S3Service.FileDetails> result = s3Service.listFiles("1");
+
+        // Verify the results
+        assertEquals(2, result.size());
+        assertThat(result).extracting("folderId").containsExactlyInAnyOrder("1", "1");
+        assertThat(result).extracting("fileName").containsExactlyInAnyOrder("file1.txt", "file2.txt");
     }
 }
