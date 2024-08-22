@@ -121,6 +121,28 @@ class S3ControllerTest {
         // Verify that downloadFile was called once
         verify(s3Service, times(1)).downloadFile(anyString(), anyString());
     }
+
+    @Test
+    void downloadFile_IOException() throws IOException {
+        // Simulate IOException by throwing it from the mock
+        doThrow(new IOException("Simulated IOException")).when(s3Service)
+                .downloadFile(anyString(), anyString());
+
+        // Perform the downloadFile call
+        ResponseEntity<?> response = s3Controller.downloadFile("folder1", "test.txt");
+
+        // Verify that the response status is INTERNAL_SERVER_ERROR
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+
+        // Check that the response body contains the correct message
+        assertTrue(response.getBody() != null && response.getBody().toString()
+                .contains("Error downloading file: Simulated IOException"));
+
+        // Verify that downloadFile was called once
+        verify(s3Service, times(1)).downloadFile(anyString(), anyString());
+    }
+
+
     @Test
     void downloadFile_FileNotFound() throws IOException {
         File mockFile = mock(File.class);
