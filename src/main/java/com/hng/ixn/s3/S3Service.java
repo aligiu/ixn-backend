@@ -94,7 +94,7 @@ public class S3Service {
                     String key = s3Object.key();
                     String[] parts = key.split("/", 2);
                     String folderId = parts[0];
-                    String fileName = parts.length > 1 ? parts[1] : key;
+                    String fileName = parts[1];
                     return new FileDetails(folderId, fileName, generateDownloadUrl(folderId, fileName));
                 })
                 .collect(Collectors.toList());
