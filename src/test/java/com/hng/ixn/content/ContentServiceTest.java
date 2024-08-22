@@ -163,7 +163,7 @@ class ContentServiceTest {
     private void setupSecurityContextWithRoles(List<String> roles) {
         Authentication authentication = mock(Authentication.class);
 
-        // Create a collection of GrantedAuthority using a more explicit approach
+        // Create a collection of GrantedAuthority
         Collection<GrantedAuthority> authorities = roles.stream()
                 .map(role -> (GrantedAuthority) () -> role)
                 .collect(Collectors.toList());
@@ -191,6 +191,22 @@ class ContentServiceTest {
 
         ContentService service = new ContentService(mock(ContentRepository.class));
         assertTrue(service.hasRequiredRole(), "The method should return true for ROLE_USER");
+    }
+
+    @Test
+    void testHasRequiredRole_withAdminAndUserRoles() {
+        setupSecurityContextWithRoles(List.of("ROLE_ADMIN", "ROLE_USER"));
+
+        ContentService service = new ContentService(mock(ContentRepository.class));
+        assertTrue(service.hasRequiredRole(), "The method should return true for having both ROLE_ADMIN and ROLE_USER");
+    }
+
+    @Test
+    void testHasRequiredRole_withOtherRole() {
+        setupSecurityContextWithRoles(List.of("ROLE_GUEST"));
+
+        ContentService service = new ContentService(mock(ContentRepository.class));
+        assertFalse(service.hasRequiredRole(), "The method should return false for roles other than ROLE_ADMIN and ROLE_USER");
     }
 
     @Test
