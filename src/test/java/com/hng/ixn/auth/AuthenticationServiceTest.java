@@ -77,7 +77,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void rejectAsEmailExistsForAdminOrUser() {
+    void registerShouldRejectAsEmailExistsForAdminOrUser() {
         RegisterAdminOrUserRequest request = new RegisterAdminOrUserRequest();
         request.setEmail("test@example.com");
 
@@ -89,7 +89,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void rejectAsEmailExistsForUser() {
+    void registerShouldRejectAsEmailExistsForUser() {
         RegisterUserRequest request = new RegisterUserRequest();
         request.setEmail("test@example.com");
 
