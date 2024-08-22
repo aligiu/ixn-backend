@@ -5,20 +5,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class S3ControllerTest {
@@ -173,6 +177,44 @@ class S3ControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("File not found in the local directory.", response.getBody());
         verify(s3Service, times(1)).downloadFile(anyString(), anyString());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void downloadFile_Success() throws IOException {
+        // Arrange
+        String folderId = "folder1";
+        String fileName = "test.txt";
+        String key = folderId + "/" + fileName;
+        String downloadPath = System.getProperty("java.io.tmpdir") + "/" + fileName;
+
+        // Create a mock File object and write content to it
+        File mockFile = new File(downloadPath);
+        byte[] fileContent = "This is a test file content".getBytes();
+        try (FileOutputStream fos = new FileOutputStream(mockFile)) {
+            fos.write(fileContent);
+        }
+
+        // Mock the behavior of s3Service
+        when(s3Service.downloadFile(eq(key), eq(downloadPath))).thenReturn(mockFile);
+
+        // Act
+        ResponseEntity<?> response = s3Controller.downloadFile(folderId, fileName);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION).contains("attachment;filename=" + fileName));
+        assertEquals(MediaType.APPLICATION_OCTET_STREAM, response.getHeaders().getContentType());
+        assertEquals(fileContent.length, response.getHeaders().getContentLength());
+
+        // Read the response body
+        InputStreamResource resource = (InputStreamResource) response.getBody();
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(fileContent)) {
+            byte[] responseBody = byteArrayInputStream.readAllBytes();
+            assertArrayEquals(fileContent, responseBody);
+        }
+
+        verify(s3Service, times(1)).downloadFile(eq(key), eq(downloadPath));
     }
 
     @Test
