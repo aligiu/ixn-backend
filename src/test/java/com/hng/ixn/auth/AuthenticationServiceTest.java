@@ -149,7 +149,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void authenticateShouldReturnValidResponse() {
+    void authenticateShouldReturnValidResponseForUser() {
         AuthenticationRequest request = new AuthenticationRequest();
         request.setEmail("test@example.com");
         request.setPassword("password123");
@@ -170,6 +170,30 @@ class AuthenticationServiceTest {
         assertEquals("jwtToken", response.getToken());
         assertEquals("test@example.com", response.getEmail());
         assertFalse(response.getIsAdmin());
+    }
+
+    @Test
+    void authenticateShouldReturnValidResponseForAdmin() {
+        AuthenticationRequest request = new AuthenticationRequest();
+        request.setEmail("admin@example.com");
+        request.setPassword("password123");
+
+        User user = User.builder()
+                .email(request.getEmail())
+                .password("encodedPassword")
+                .role(Role.ROLE_ADMIN)
+                .build();
+
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(user));
+        when(jwtService.generateToken(any(User.class))).thenReturn("adminJwtToken");
+
+        AuthenticationResponse response = authenticationService.authenticate(request);
+
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        assertNotNull(response);
+        assertEquals("adminJwtToken", response.getToken());
+        assertEquals("admin@example.com", response.getEmail());
+        assertTrue(response.getIsAdmin());
     }
 
     @Test
