@@ -48,7 +48,7 @@ class AuthenticationServiceTest {
     @Test
     void registerShouldCreateUserSuccessfully() {
         RegisterAdminOrUserRequest request = new RegisterAdminOrUserRequest();
-        request.setEmail("test@example.com");
+        request.setEmail("user@example.com");
         request.setPassword("password123");
         request.setRole(Role.ROLE_USER);
 
@@ -61,8 +61,28 @@ class AuthenticationServiceTest {
         verify(userRepository).save(any(User.class));
         assertNotNull(response);
         assertEquals("jwtToken", response.getToken());
-        assertEquals("test@example.com", response.getEmail());
+        assertEquals("user@example.com", response.getEmail());
         assertFalse(response.getIsAdmin());
+    }
+
+    @Test
+    void registerShouldCreateAdminSuccessfully() {
+        RegisterAdminOrUserRequest request = new RegisterAdminOrUserRequest();
+        request.setEmail("admin@example.com");
+        request.setPassword("password123");
+        request.setRole(Role.ROLE_ADMIN);
+
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
+        when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
+        when(jwtService.generateToken(any(User.class))).thenReturn("adminJwtToken");
+
+        AuthenticationResponse response = authenticationService.register(request);
+
+        verify(userRepository).save(any(User.class));
+        assertNotNull(response);
+        assertEquals("adminJwtToken", response.getToken());
+        assertEquals("admin@example.com", response.getEmail());
+        assertTrue(response.getIsAdmin());
     }
 
     @Test
