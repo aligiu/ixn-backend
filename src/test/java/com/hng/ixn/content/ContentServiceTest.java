@@ -159,6 +159,57 @@ class ContentServiceTest {
         verify(contentRepository, times(1)).saveAll(anyList());
     }
 
+    @Test
+    void testSaveMultipleContent_withNonNullTimestamp() {
+        LocalDateTime customTimestamp = LocalDateTime.of(2024, 8, 23, 14, 30);
+
+        ContentDTO dto1 = new ContentDTO(1, "Title1", "Description1", "Content1", 2, null,
+                "SecretContent1", customTimestamp);
+
+        ContentDTO dto2 = new ContentDTO(2, "Title2", "Description2", "Content2", 3, 1,
+                "SecretContent2", customTimestamp);
+
+        when(contentRepository.saveAll(anyList())).thenAnswer(
+                invocation -> invocation.getArgument(0));
+
+        List<Content> result = contentService.saveMultipleContent(Arrays.asList(dto1, dto2));
+
+        assertEquals(2, result.size());
+        assertEquals(customTimestamp, result.get(0).getTimestamp());
+        assertEquals(customTimestamp, result.get(1).getTimestamp());
+
+        verify(contentRepository, times(1)).saveAll(anyList());
+    }
+
+    @Test
+    void testSaveMultipleContent_withNullTimestamp() {
+        // Use fixed timestamp for comparison
+        LocalDateTime now = LocalDateTime.now();
+
+        ContentDTO dto1 = new ContentDTO(1, "Title1", "Description1", "Content1", 2, null,
+                "SecretContent1", null);
+
+        ContentDTO dto2 = new ContentDTO(2, "Title2", "Description2", "Content2", 3, 1,
+                "SecretContent2", null);
+
+        when(contentRepository.saveAll(anyList())).thenAnswer(
+                invocation -> invocation.getArgument(0));
+
+        List<Content> result = contentService.saveMultipleContent(Arrays.asList(dto1, dto2));
+
+        assertEquals(2, result.size());
+        // Using LocalDateTime.now() would be the same as now
+        // Use a fixed clock to avoid issues with current time in tests
+        assertNotNull(result.get(0).getTimestamp());
+        assertNotNull(result.get(1).getTimestamp());
+        assertTrue(result.get(0).getTimestamp().isAfter(now.minusSeconds(1)) && result.get(0).getTimestamp().isBefore(now.plusSeconds(1)));
+        assertTrue(result.get(1).getTimestamp().isAfter(now.minusSeconds(1)) && result.get(1).getTimestamp().isBefore(now.plusSeconds(1)));
+
+        verify(contentRepository, times(1)).saveAll(anyList());
+    }
+
+
+
     // Helper method to setup SecurityContext with mocked Authentication
     private void setupSecurityContextWithRoles(List<String> roles) {
         Authentication authentication = mock(Authentication.class);
