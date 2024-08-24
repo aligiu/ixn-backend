@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -122,6 +123,26 @@ class AuthenticationControllerTest {
         assertEquals("user@example.com", result.getBody().getEmail());
         assertFalse(result.getBody().getIsAdmin());
         assertNull(result.getBody().getErrorMessage());
+        verify(service, times(1)).authenticate(request);
+    }
+
+    @Test
+    void authenticate_Failure() {
+        AuthenticationRequest request = new AuthenticationRequest();
+        AuthenticationResponse errorResponse = AuthenticationResponse.builder()
+                .errorMessage("Invalid credentials")
+                .build();
+
+        when(service.authenticate(any(AuthenticationRequest.class))).thenThrow(new BadCredentialsException("Invalid credentials"));
+
+        ResponseEntity<AuthenticationResponse> result = controller.authenticate(request);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
+        assertEquals("Invalid credentials", result.getBody().getErrorMessage());
+        assertNull(result.getBody().getToken());
+        assertNull(result.getBody().getEmail());
+        assertNull(result.getBody().getIsAdmin());
+
         verify(service, times(1)).authenticate(request);
     }
 }
