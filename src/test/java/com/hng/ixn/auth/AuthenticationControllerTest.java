@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class AuthenticationControllerTest {
 
@@ -122,5 +122,6 @@ class AuthenticationControllerTest {
         assertEquals("user@example.com", result.getBody().getEmail());
         assertFalse(result.getBody().getIsAdmin());
         assertNull(result.getBody().getErrorMessage());
+        verify(service, times(1)).authenticate(request);
     }
 }
