@@ -26,8 +26,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.hng.ixn.s3.FileDetails;
-
 
 class S3ServiceTest {
 
@@ -121,7 +119,7 @@ class S3ServiceTest {
     }
 
     @Test
-    public void testListFiles() {
+    public void listFolderFiles() {
         // Mock S3 objects
         S3Object s3Object1 = mock(S3Object.class);
         S3Object s3Object2 = mock(S3Object.class);

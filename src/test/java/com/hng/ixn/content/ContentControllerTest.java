@@ -67,7 +67,30 @@ class ContentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void createContent() throws Exception {
+    void createContentAsAdmin() throws Exception {
+        // Create and setup mock ContentDTO and Content objects
+        ContentDTO contentDTO = new ContentDTO();
+        // Setup fields in ContentDTO if needed
+
+        Content content = new Content();
+        content.setId(1); // Ensure ID is set
+        List<ContentDTO> contentDTOs = new ArrayList<>();
+        contentDTOs.add(contentDTO);
+
+        List<Content> createdContents = new ArrayList<>();
+        createdContents.add(content);
+
+        when(contentService.saveMultipleContent(anyList())).thenReturn(createdContents);
+
+        mockMvc.perform(post("/api/content").contentType("application/json")
+                        .content("[{\"id\":1}]")) // Ensure this JSON structure matches ContentDTO
+                .andExpect(status().isCreated()).andExpect(jsonPath("$", hasSize(1))).andExpect(
+                        jsonPath("$[0].id", is(1))); // Check ID field
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void createContentAsUser() throws Exception {
         // Create and setup mock ContentDTO and Content objects
         ContentDTO contentDTO = new ContentDTO();
         // Setup fields in ContentDTO if needed
