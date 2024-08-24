@@ -137,7 +137,7 @@ class AuthenticationControllerTest {
 
         ResponseEntity<AuthenticationResponse> result = controller.authenticate(request);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
         assertEquals("Invalid credentials", result.getBody().getErrorMessage());
         assertNull(result.getBody().getToken());
         assertNull(result.getBody().getEmail());

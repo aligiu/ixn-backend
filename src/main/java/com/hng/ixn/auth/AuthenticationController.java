@@ -56,7 +56,7 @@ public class AuthenticationController {
             AuthenticationResponse errorResponse = AuthenticationResponse.builder()
                     .errorMessage("Invalid credentials")
                     .build();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
         }
     }
 }
