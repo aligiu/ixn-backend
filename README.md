@@ -21,9 +21,9 @@
             - `IXN_POSTGRES_USERNAME`
 
 3. Build the project using Maven:
-   `mvn install`
+   `./mvnw install`
 4. Start the Spring Boot application:
-    `mvn spring-boot:run`
+    `./mvnw spring-boot:run`
 
 # Data Config
 
