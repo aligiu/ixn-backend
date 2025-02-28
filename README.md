@@ -45,7 +45,7 @@ The simplest way to run the server is to use **render.com**, which is relatively
 ## 2. Create a Render.com Web Service
 - Go to **render.com** and create a web service (make sure to select the Docker runtime).
 - Link the web service to your backend repository on GitHub, which will trigger automatic deployment. However, the server will not work properly yet.
-- For more information, see [render.com Web Service Setup](https://docs.render.com/web-services)
+- For more information, see [render.com web service setup](https://docs.render.com/web-services)
 
 ## 3. Create a PostgreSQL Database on Render.com
 - Create a PostgreSQL database on **render.com**. You will receive a database username, password, and URL.
@@ -54,7 +54,7 @@ The simplest way to run the server is to use **render.com**, which is relatively
   - `IXN_POSTGRES_PASSWORD`
   - `IXN_POSTGRES_URL`
   - `IXN_POSTGRES_USERNAME`
-- For more information, see [render database Docs](https://docs.render.com/databases)
+- For more information, see [render database docs](https://docs.render.com/databases)
 
 ## 4. Create an S3 Bucket in Amazon Web Services (AWS)
 - Create an **S3 bucket** in **AWS** and name it `ixn-radio`. Also, create an IAM role that has access to this S3 bucket.
