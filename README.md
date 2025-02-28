@@ -41,12 +41,11 @@ The simplest way to run the server is to use **render.com**, which is relatively
 
 ## 1. Create a GitHub Account
 - Create a GitHub account and fork the backend repository, or you can clone the repository and push the code to your own GitHub repository. This allows you to develop locally with the cloned code.
-- GitHub: [https://github.com/](https://github.com/)
 
 ## 2. Create a Render.com Web Service
 - Go to **render.com** and create a web service (make sure to select the Docker runtime).
 - Link the web service to your backend repository on GitHub, which will trigger automatic deployment. However, the server will not work properly yet.
-- Render.com Web Service Setup: [https://docs.render.com/web-services](https://docs.render.com/web-services)
+- For more information, see [render.com Web Service Setup](https://docs.render.com/web-services)
 
 ## 3. Create a PostgreSQL Database on Render.com
 - Create a PostgreSQL database on **render.com**. You will receive a database username, password, and URL.
