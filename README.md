@@ -55,16 +55,11 @@ The simplest way to run the server is to use **render.com**, which is relatively
   - `IXN_POSTGRES_PASSWORD`
   - `IXN_POSTGRES_URL`
   - `IXN_POSTGRES_USERNAME`
-- Render Database Docs: [https://docs.render.com/databases](https://docs.render.com/databases)
-
-  Example database info:
-  - Database Name: `induction_app`
-  - Username: `induction_app_user`
-  - Password: `G0nnYgZ2B1B0D6RbN2ayjWFDOHsMI9Mn`
+- For more information, see [render database Docs](https://docs.render.com/databases)
 
 ## 4. Create an S3 Bucket in Amazon Web Services (AWS)
 - Create an **S3 bucket** in **AWS** and name it `ixn-radio`. Also, create an IAM role that has access to this S3 bucket.
-- Follow the exact configuration in the provided video.
+- You can follow the exact configuration in this [video](https://www.youtube.com/watch?v=FLIp6BLtwjk).
 - Take note of your **Access Key ID** and **Secret Access Key** (at **3:11** in the video). These correspond to the following environment variables:
   - `IXN_AWS_USER_ACCESS_KEY`
   - `IXN_AWS_USER_SECRET_KEY`
