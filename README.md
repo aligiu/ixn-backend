@@ -88,7 +88,7 @@ You do not need to complete the test at the end of the video (**4:58**).
   - `IXN_AWS_USER_SECRET_KEY`: Secret key for the IAM user with access to the `ixn-radio` S3 bucket.
   - `IXN_POSTGRES_URL`: The URL of the PostgreSQL server.
   - `IXN_POSTGRES_USERNAME`: The username of the PostgreSQL admin user.
-  - `IXN_POSTGRES_PASSWORD`: The password for the PostgreSQL user.
+  - `IXN_POSTGRES_PASSWORD`: The password for the PostgreSQL admin user.
 
 - These environment variables serve the following purposes:
   - Set up the encryption authentication token for security needs.
